@@ -8,8 +8,21 @@ from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm
 from django import forms
 
 def update_password(request):
-    # Update User Password Episode 23, 7:57
-    return render(request, "update_password.html", {})  
+    # Update User Password Episode 23, 10:42
+    if request.user.is_authenticated:
+        current_user = request.user
+        #  Did they fill out the form ?
+        if request.method == "POST":
+            #  Do this stuff or
+            pass
+        else:
+            form = ChangePasswordForm(user=current_user)
+            return render(request, "update_password.html", {'form':form})        
+        #  If they didn't fill out the form, show them the form
+    else:
+        messages.success(request, "Oh No, To Access This Page, You need To login")
+        return redirect('home')
+
 
 def update_user(request):
     if request.user.is_authenticated:

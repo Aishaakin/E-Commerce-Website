@@ -4,8 +4,8 @@ from django import forms
 
 class ChangePasswordForm(SetPasswordForm):
 	class Meta:
-       model = User
-	   fields = ['new_password1', 'new_password2']
+        model = User
+	    fields = ['new_password1', 'new_password2']
 
 class UpdateUserForm(UserChangeForm):
 	# Hide Password Stuff
