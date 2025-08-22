@@ -1,14 +1,30 @@
 from django.shortcuts import render, redirect
-from .models import Product, Category
+from .models import Product, Category, Profile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm
+from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
+
 from django import forms
 
+def update_info(request):
+    if request.user.is_authenticated:
+        # Get Current User
+        current_user = Profile.objects.get(user__id=request.id)
+                # Get  Original User Form
+        form = UserInfoForm(request.POST or None, instance=current_user)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your Profile Has Been Updated")
+            return redirect('home')
+        return render(request, "update_info.html", {'form':form})
+    else:
+        messages.success(request, "You  Must Be Logged In To Access This Page") 
+        return redirect('home') 
+
 def update_password(request):
-    # Update User Password Episode 23, 10:42
     if request.user.is_authenticated:
         current_user = request.user
         #  Did they fill out the form ?
@@ -43,15 +59,14 @@ def update_user(request):
             user_form.save()
 
             login(request, current_user)
-            message.success(request, "The User Has Been Updated")
+            messages.success(request, "The User Has Been Updated")
             return redirect('home')
 
         return render(request, "update_user.html", {'user_form':user_form})    
     else:
-        message.success(request, "Oh No, To Access This Page, You need To login") 
+        messages.success(request, "Oh No, To Access This Page, You need To login") 
         return redirect('home') 
-
-    return render(request, 'update_user.html', {})    
+   
 
 def category_summary(request):
             categories = Category.objects.all()
@@ -116,8 +131,8 @@ def register_user(request):
             # log in user
             user = authenticate(username=username, password=password)
             login(request, user)
-            messages.success(request, ("You Have Registered Successfuly! Welcome"))
-            return redirect('home')
+            messages.success(request, ("You have Successfully Registered, Plese Complete Your Profile Info"))
+            return redirect('update_info')
         else:
             messages.success(request, ("Whoops! There was a problem with you registring, Please Try Again"))
             return redirect('register')
