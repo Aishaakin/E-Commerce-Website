@@ -14,6 +14,7 @@ class Profile(models.Model):
     zip_code = models.CharField(max_length=20, blank=True)
     country = models.CharField(max_length=50, blank=True)
     date_modified = models.DateTimeField(User, auto_now=True)
+    old_cart = models.CharField(max_length=50, blank=True, null=True)
     
     def __str__(self):
         return self.user.username

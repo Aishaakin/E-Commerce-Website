@@ -63,7 +63,7 @@ $(document).on('click', '#add-cart', function(e){
     e.preventDefault();
     $.ajax({
         type: 'POST',
-        url: '{% url 'cart_add' %}',
+        url: "{% url 'cart_add' %}", // i changed the single quote to double quote due to some errors
         data: {
     product_id: $('#add-cart').val(),
     product_qty: $('#qty-cart option:selected').text(),
