@@ -3,26 +3,28 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPassw
 from django import forms
 from .models import Profile
 
-class UpdateInfoForm(forms.ModelForm):
-	phone = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone Number': 'Phone'}), required=False)
-    address1 = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone Number': 'Address1'}), required=False)
-    address2 = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone Number': 'Address2'}), required=False)
-    city = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone Number': 'City'}), required=False)
-    state = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone Number': 'State'}), required=False)
-    zip_code = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone Number': 'Zipcode'}), required=False)
-    country = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone Number': 'Country'}), required=False)
-    
+
+class UserInfoForm(forms.ModelForm):
+	phone = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone'}), required=False)
+	address1 = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Address 1'}), required=False)
+	address2 = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Address 2'}), required=False)
+	city = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'City'}), required=False)
+	state = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'State'}), required=False)
+	zipcode = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Zipcode'}), required=False)
+	country = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Country'}), required=False)
+
 	class Meta:
-	    model = Profile
-		fields = ('phone', 'address1', 'address2', 'city', 'state', 'zip_code', 'country')
+		model = Profile
+		fields = ('phone', 'address1', 'address2', 'city', 'state', 'zipcode', 'country', )
+
 
 
 class ChangePasswordForm(SetPasswordForm):
 	class Meta:
-        model = User
-	    fields = ['new_password1', 'new_password2']
-        
-    def __init__(self, *args, **kwargs):
+		model = User
+		fields = ['new_password1', 'new_password2']
+
+	def __init__(self, *args, **kwargs):
 		super(ChangePasswordForm, self).__init__(*args, **kwargs)
 
 		self.fields['new_password1'].widget.attrs['class'] = 'form-control'
@@ -36,8 +38,9 @@ class ChangePasswordForm(SetPasswordForm):
 		self.fields['new_password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
 
 class UpdateUserForm(UserChangeForm):
-	# Hide Password Stuff
+	# Hide Password stuff
 	password = None
+	# Get other fields
 	email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}), required=False)
 	first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}), required=False)
 	last_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}), required=False)
@@ -54,7 +57,7 @@ class UpdateUserForm(UserChangeForm):
 		self.fields['username'].label = ''
 		self.fields['username'].help_text = '<span class="form-text text-muted"><small>Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small></span>'
 
-
+		
 class SignUpForm(UserCreationForm):
 	email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
 	first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
