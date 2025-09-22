@@ -1,10 +1,13 @@
 
 from pathlib import Path
 import os
+#from dotenv import local_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load our environment variables
+#load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -74,12 +77,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-        # 'ENGINE': 'django.db.backends.postgresql',
-        # 'NAME': 'railway',
-        # 'USER': 'postgres',
-        # 'PASSWORD': DB_PASSWORD_YO,
-        # 'HOST': 'viaduct.proxy.rlwy.net',
-        # 'PORT': '23278',
+        
+        #'ENGINE': 'django.db.backends.postgresql',
+        #'NAME': 'railway',
+        #'USER': 'postgres',
+        #'PASSWORD': os.environ.get('DB_PASSWORD_YO'),
+        #'HOST': 'viaduct.proxy.rlwy.net',
+        #'PORT': '23278',
     }
 }
 
@@ -133,4 +137,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 PAYPAL_TEST = True
 
 
-# PAYPAL_RECEIVER_EMAIL = 'business@codemytest.com' Business Sandbox account
+# PAYPAL_RECEIVER_EMAIL = 'dayagilcore@gmail.com' Business Sandbox account
