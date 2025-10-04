@@ -32,28 +32,28 @@ def search(request):
 
 
 def update_info(request):
-	if request.user.is_authenticated:
-		# Get Current User
-		current_user = Profile.objects.get(user__id=request.user.id)
-		# Get Current User's Shipping Info
-		shipping_user = ShippingAddress.objects.get(user__id=request.user.id)
-		
-		# Get original User Form
-		form = UserInfoForm(request.POST or None, instance=current_user)
-		# Get User's Shipping Form
-		shipping_form = ShippingForm(request.POST or None, instance=shipping_user)		
-		if form.is_valid() or shipping_form.is_valid():
-			# Save original form
-			form.save()
-			# Save shipping form
-			shipping_form.save()
+    if request.user.is_authenticated:
+        # Get Current User - use get_or_create
+        current_user, created = Profile.objects.get_or_create(user__id=request.user.id)
+        # Get Current User's Shipping Info - use get_or_create
+        shipping_user, created = ShippingAddress.objects.get_or_create(user__id=request.user.id)
+        
+        # Get original User Form
+        form = UserInfoForm(request.POST or None, instance=current_user)
+        # Get User's Shipping Form
+        shipping_form = ShippingForm(request.POST or None, instance=shipping_user)        
+        if form.is_valid() or shipping_form.is_valid():
+            # Save original form
+            form.save()
+            # Save shipping form
+            shipping_form.save()
 
-			messages.success(request, "Your Info Has Been Updated!!")
-			return redirect('home')
-		return render(request, "update_info.html", {'form':form, 'shipping_form':shipping_form})
-	else:
-		messages.success(request, "You Must Be Logged In To Access That Page!!")
-		return redirect('home')
+            messages.success(request, "Your Info Has Been Updated!!")
+            return redirect('home')
+        return render(request, "update_info.html", {'form':form, 'shipping_form':shipping_form})
+    else:
+        messages.success(request, "You Must Be Logged In To Access That Page!!")
+        return redirect('home')
 
 
 
@@ -128,36 +128,38 @@ def about(request):
 	return render(request, 'about.html', {})	
 
 def login_user(request):
-	if request.method == "POST":
-		username = request.POST['username']
-		password = request.POST['password']
-		user = authenticate(request, username=username, password=password)
-		if user is not None:
-			login(request, user)
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
 
-			# Do some shopping cart stuff
-			current_user = Profile.objects.get(user__id=request.user.id)
-			# Get their saved cart from database
-			saved_cart = current_user.old_cart
-			# Convert database string to python dictionary
-			if saved_cart:
-				# Convert to dictionary using JSON
-				converted_cart = json.loads(saved_cart)
-				# Add the loaded cart dictionary to our session
-				# Get the cart
-				cart = Cart(request)
-				# Loop thru the cart and add the items from the database
-				for key,value in converted_cart.items():
-					cart.db_add(product=key, quantity=value)
+            # Do some shopping cart stuff
+            # Use get_or_create to handle missing profiles
+            current_user, created = Profile.objects.get_or_create(user__id=request.user.id)
+            
+            # Get their saved cart from database
+            saved_cart = current_user.old_cart
+            # Convert database string to python dictionary
+            if saved_cart:
+                # Convert to dictionary using JSON
+                converted_cart = json.loads(saved_cart)
+                # Add the loaded cart dictionary to our session
+                # Get the cart
+                cart = Cart(request)
+                # Loop thru the cart and add the items from the database
+                for key,value in converted_cart.items():
+                    cart.db_add(product=key, quantity=value)
 
-			messages.success(request, ("You Have Been Logged In!"))
-			return redirect('home')
-		else:
-			messages.success(request, ("There was an error, please try again..."))
-			return redirect('login')
+            messages.success(request, ("You Have Been Logged In!"))
+            return redirect('home')
+        else:
+            messages.success(request, ("There was an error, please try again..."))
+            return redirect('login')
 
-	else:
-		return render(request, 'login.html', {})
+    else:
+        return render(request, 'login.html', {})
 
 
 def logout_user(request):

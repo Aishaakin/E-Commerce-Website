@@ -18,9 +18,10 @@ SECRET_KEY = 'django-insecure-2api(3_2g#o3h(3x9tz%w^c^m$*d2b!j2*u^f&a=#*u6t*w20v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
+ALLOWED_HOSTS = ['https://djangotest.com', 'djangotest.com', 'localhost', 'kiley-rattly-shala.ngrok-free.dev', '127.0.0.1', '.ngrok-free.dev', '.ngrok.io']
+CSRF_TRUSTED_ORIGINS = ['https://djangotest.com', 'https://kiley-rattly-shala.ngrok-free.dev', 'https://*.ngrok-free.dev',
+    'https://*.ngrok.io',]
+# Ngrok local paypal testing 5:24
 # Application definition
 
 INSTALLED_APPS = [
