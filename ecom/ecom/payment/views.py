@@ -217,6 +217,8 @@ def billing_info(request):
 
 		# Get the host
 		host = request.get_host()
+		# Create Invoice Number
+		# my_Invoice = str(uuid.uuid4()) paypal IPN 7:05
 		# Create Paypal Form Dictionary
 		paypal_dict = {
 			'business': settings.PAYPAL_RECEIVER_EMAIL,

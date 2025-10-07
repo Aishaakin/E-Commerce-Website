@@ -66,6 +66,9 @@ class OrderItem(models.Model):
 
 	quantity = models.PositiveBigIntegerField(default=1)
 	price = models.DecimalField(max_digits=7, decimal_places=2)
+	# Paypal Invoice and Paid T/F
+	invoice = models.CharField(max_length=250, null=True, blank=True)
+	paid = models.BooleanField(default=False)
 
 
 	def __str__(self):
