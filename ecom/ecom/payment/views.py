@@ -217,22 +217,20 @@ def billing_info(request):
 
 		# Get the host
 		host = request.get_host()
-		# Create Invoice Number
-		# my_Invoice = str(uuid.uuid4()) paypal IPN 7:05
 		# Create Paypal Form Dictionary
 		paypal_dict = {
 			'business': settings.PAYPAL_RECEIVER_EMAIL,
 			'amount': totals,
-			'item_name': 'MTN Product Order',
+			'item_name': 'Book Order',
 			'no_shipping': '2',
 			'invoice': str(uuid.uuid4()),
-			'currency_code': 'NGN', # Nigeria currency code
+			'currency_code': 'USD', # EUR for Euros
 			'notify_url': 'https://{}{}'.format(host, reverse("paypal-ipn")),
 			'return_url': 'https://{}{}'.format(host, reverse("payment_success")),
 			'cancel_return': 'https://{}{}'.format(host, reverse("payment_failed")),
 		}
 
-		# Create acutal paypal button
+		# Create actual paypal button
 		paypal_form = PayPalPaymentsForm(initial=paypal_dict)
 
 
@@ -258,34 +256,23 @@ def billing_info(request):
 
 
 def checkout(request):
-    # Get the cart
-    cart = Cart(request)
-    cart_products = cart.get_prods
-    quantities = cart.get_quants
-    totals = cart.cart_total()
+	# Get the cart
+	cart = Cart(request)
+	cart_products = cart.get_prods
+	quantities = cart.get_quants
+	totals = cart.cart_total()
 
-    if request.user.is_authenticated:
-        # Checkout as logged in user
-        # Use get_or_create to handle missing shipping addresses
-        shipping_user, created = ShippingAddress.objects.get_or_create(user=request.user)
-        
-        # Shipping Form - use instance if it exists, otherwise create new form
-        shipping_form = ShippingForm(request.POST or None, instance=shipping_user)
-        return render(request, "payment/checkout.html", {
-            "cart_products": cart_products, 
-            "quantities": quantities, 
-            "totals": totals, 
-            "shipping_form": shipping_form 
-        })
-    else:
-        # Checkout as guest
-        shipping_form = ShippingForm(request.POST or None)
-        return render(request, "payment/checkout.html", {
-            "cart_products": cart_products, 
-            "quantities": quantities, 
-            "totals": totals, 
-            "shipping_form": shipping_form
-        })
+	if request.user.is_authenticated:
+		# Checkout as logged in user
+		# Shipping User
+		shipping_user = ShippingAddress.objects.get(user__id=request.user.id)
+		# Shipping Form
+		shipping_form = ShippingForm(request.POST or None, instance=shipping_user)
+		return render(request, "payment/checkout.html", {"cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_form":shipping_form })
+	else:
+		# Checkout as guest
+		shipping_form = ShippingForm(request.POST or None)
+		return render(request, "payment/checkout.html", {"cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_form":shipping_form})
 
 	
 

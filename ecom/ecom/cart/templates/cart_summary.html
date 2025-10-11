@@ -4,7 +4,7 @@
 {% block content %}
 
         <!-- Header-->
-        <header class="bg-dark py-5">
+        <header class="bg-warning py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
                     <h1 class="display-4 fw-bolder">Shopping Cart</h1>
@@ -71,7 +71,7 @@
                 </div>
             </div>
             <br/><br/>
-        <a href="{% url 'home'%}" class="btn btn-secondary">Home</a>
+        <a href="{% url 'home'%}" class="btn btn-warning">Home</a>
         <button type="button" data-index="{{product.id}}" class="btn btn-secondary update-cart">Update</button>
         <button type="button" data-index="{{product.id}}" class="btn btn-danger delete-product">Remove</button>
         
