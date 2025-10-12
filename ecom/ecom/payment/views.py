@@ -142,7 +142,7 @@ def process_order(request):
 						create_order_item = OrderItem(order_id=order_id, product_id=product_id, user=user, quantity=value, price=price)
 						create_order_item.save()
 
-			# Delete our cart
+			# Delete the cart
 			for key in list(request.session.keys()):
 				if key == "session_key":
 					# Delete the key
@@ -277,7 +277,20 @@ def checkout(request):
 	
 
 def payment_success(request):
-	return render(request, "payment/payment_success.html", {})
+    # Delete cart after payment success pops up
+    # Get the cart
+    cart = Cart(request)
+    cart_products = cart.get_prods
+    quantities = cart.get_quants
+    totals = cart.cart_total()
+
+    # Delete the cart
+    for key in list(request.session.keys()):
+        if key == "session_key":
+            # Delete the key
+            del request.session[key]
+    
+    return render(request, "payment/payment_success.html", {})
 
 
 def payment_failed(request):
